@@ -6,6 +6,7 @@ const TripForm: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const isEditMode = Boolean(id);
+    const BASE_URL = import.meta.env.VITE_API_URL;
 
     const [formData, setFormData] = useState<Trip>({
         id: 0, // ID is ignored on create usually, or handled by backend
@@ -20,7 +21,7 @@ const TripForm: React.FC = () => {
     useEffect(() => {
         if (isEditMode && id) {
             setLoading(true);
-            fetch(`/api/trips/${id}`)
+            fetch(`${BASE_URL}/api/trips/${id}`)
                 .then((res) => {
                     if (!res.ok) throw new Error('Failed to fetch trip');
                     return res.json();
@@ -49,7 +50,8 @@ const TripForm: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const url = isEditMode ? `/api/trips/${id}` : '/api/trips';
+        const BASE_URL = import.meta.env.VITE_API_URL;
+        const url = isEditMode ? `${BASE_URL}/api/trips/${id}` : `${BASE_URL}/api/trips`;
         const method = isEditMode ? 'PUT' : 'POST';
 
         try {

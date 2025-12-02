@@ -10,11 +10,12 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch('/api/trips');
+        const response = await fetch(`${BASE_URL}/api/trips`);
         if (!response.ok) {
           throw new Error('Failed to fetch trips');
         }
