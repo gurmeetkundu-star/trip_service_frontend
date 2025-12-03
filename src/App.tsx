@@ -4,6 +4,7 @@ import './index.css';
 import TripList from './components/TripList';
 import TripForm from './components/TripForm';
 import ResetDriverDataModal from './components/ResetDriverDataModal';
+import ChatSidebar from './components/ChatSidebar';
 import { mqttService } from './services/mqttService';
 import type { Trip } from './types';
 
@@ -61,7 +62,7 @@ const Home = () => {
   };
 
   return (
-    <main style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)' }}>
+    <main style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)', paddingRight: '320px' }}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <button className="update-btn" onClick={() => navigate('/create')}>
           + Create New Trip
@@ -108,6 +109,8 @@ const Home = () => {
         onClose={() => setIsResetModalOpen(false)}
         onSubmit={handleResetDriverData}
       />
+
+      <ChatSidebar />
     </main>
   );
 };
