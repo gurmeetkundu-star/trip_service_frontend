@@ -1,14 +1,19 @@
 import mqtt from 'mqtt';
 
-// Broker details
-const BROKER_URL = `ws://172.236.95.200:9001/mqtt`;
+// Broker details - automatically detect protocol based on page protocol
+// For HTTPS pages (production), use WSS. For HTTP pages (local dev), use WS.
+const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+const protocol = isSecure ? 'wss' : 'ws';
+const port = isSecure ? '8084' : '9001'; // WSS typically on 8084, WS on 9001
 
-// Note: For browser environments, CA certificates must be trusted at OS/browser level
-// The 'ca' option is not supported in browser WebSocket connections
+const BROKER_URL = `${protocol}://172.236.95.200:${port}/mqtt`;
+
+console.log(`🌐 MQTT Config: protocol=${protocol}, port=${port}, isSecure=${isSecure}`);
+
 const OPTIONS: mqtt.IClientOptions = {
     username: 'admin',
     password: 'admin123',
-    protocol: 'ws', // Encrypted WebSocket Secure
+    protocol: protocol as 'ws' | 'wss',
     clientId: `client_${Math.random().toString(16).substr(2, 8)}`,
     rejectUnauthorized: false, // Allow self-signed certificates
     keepalive: 60, // Send ping every 60 seconds
