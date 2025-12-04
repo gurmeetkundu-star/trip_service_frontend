@@ -22,18 +22,7 @@ const TripList: React.FC<TripListProps> = ({ trips, onUpdate }) => {
         }
     }, []);
 
-    const handlePublish = async (trip: Trip) => {
-        try {
-            await mqttService.connect();
-            const topic = 'trip_update';
-            const payload = JSON.stringify(trip);
-            await mqttService.publish(topic, payload);
-            alert(`Trip ${trip.id} published to ${topic}`);
-        } catch (error) {
-            console.error("Failed to publish trip:", error);
-            alert("Failed to publish trip. Check console.");
-        }
-    };
+
 
     return (
         <div className="trip-list">
@@ -56,12 +45,7 @@ const TripList: React.FC<TripListProps> = ({ trips, onUpdate }) => {
                             </div>
                         </div>
                         <div className="trip-actions" style={{ display: 'flex', gap: '10px' }}>
-                            <button
-                                className="publish-btn btn-outline"
-                                onClick={() => handlePublish(trip)}
-                            >
-                                Publish
-                            </button>
+
                             <button className="update-btn" onClick={() => onUpdate(trip.id)}>
                                 Update
                             </button>
