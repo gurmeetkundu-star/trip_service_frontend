@@ -1,21 +1,19 @@
 import mqtt from 'mqtt';
 
 // Broker details
-const BROKER_HOST = 'w66aeaae.ala.asia-southeast1.emqxsl.com';
-// Browsers must use WebSockets (wss). 
-// Standard WSS port is often 8084 for EMQX, but user specified 8883 (MQTTS).
-// We will try to use WSS on 8084 first as it's more likely for browsers.
-// If the user specifically configured 8883 for WSS, we could change it.
-// However, 8883 is standard for MQTTS (TCP), which browsers can't do.
-// Let's try to construct a WSS URL.
-const BROKER_URL = `wss://${BROKER_HOST}:8084/mqtt`;
+const BROKER_URL = `ws://172.236.95.200:9001/mqtt`;
 
+// Note: For browser environments, CA certificates must be trusted at OS/browser level
+// The 'ca' option is not supported in browser WebSocket connections
 const OPTIONS: mqtt.IClientOptions = {
-    username: 'prashant.singh',
-    password: 'hackathon',
-    protocol: 'wss',
-    keepalive: 60,
-    clientId: `mqttjs_${Math.random().toString(16).substr(2, 8)}`,
+    username: 'admin',
+    password: 'admin123',
+    protocol: 'ws', // Encrypted WebSocket Secure
+    clientId: `client_${Math.random().toString(16).substr(2, 8)}`,
+    rejectUnauthorized: false, // Allow self-signed certificates
+    keepalive: 60, // Send ping every 60 seconds
+    clean: true, // Clean session
+    reconnectPeriod: 1000, // Reconnect after 1 second
 };
 
 class MQTTService {
@@ -37,8 +35,8 @@ class MQTTService {
             this.client = mqtt.connect(BROKER_URL, OPTIONS);
 
             this.client.on('connect', () => {
-                console.log('MQTT Connected');
-                this.connectionPromise = null; // Clear promise so we can reconnect if needed later
+                console.log('✅ MQTT Connected');
+                this.connectionPromise = null;
 
                 // Resubscribe to topics if any
                 this.messageCallbacks.forEach((_, topic) => {
@@ -51,17 +49,25 @@ class MQTTService {
             });
 
             this.client.on('error', (err) => {
-                console.error('MQTT Connection Error:', err);
+                console.error('❌ MQTT Connection Error:', err);
                 this.connectionPromise = null;
                 reject(err);
             });
 
             this.client.on('offline', () => {
-                console.log('MQTT Offline');
+                console.log('⚠️  MQTT Offline');
             });
 
             this.client.on('reconnect', () => {
-                console.log('MQTT Reconnecting');
+                console.log('🔄 MQTT Reconnecting');
+            });
+
+            this.client.on('close', () => {
+                console.log('🔌 MQTT Connection Closed');
+            });
+
+            this.client.on('disconnect', () => {
+                console.log('⚡ MQTT Disconnected');
             });
 
             this.client.on('message', (topic, message) => {

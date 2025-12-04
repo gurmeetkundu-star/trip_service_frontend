@@ -62,7 +62,7 @@ const Home = () => {
   };
 
   return (
-    <main style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)', paddingRight: '320px' }}>
+    <main style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)' }}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <button className="update-btn" onClick={() => navigate('/create')}>
           + Create New Trip
