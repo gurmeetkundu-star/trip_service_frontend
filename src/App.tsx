@@ -86,19 +86,9 @@ const Home = () => {
 
       <div style={{ marginTop: '20px', padding: '20px 0', borderTop: '1px solid #eee' }}>
         <button
-          className="reset-driver-btn"
+          className="reset-driver-btn btn-primary"
           onClick={() => setIsResetModalOpen(true)}
-          style={{
-            width: '100%',
-            padding: '15px',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold'
-          }}
+          style={{ width: '100%' }}
         >
           Reset Driver Data
         </button>

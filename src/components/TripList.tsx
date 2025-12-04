@@ -57,16 +57,8 @@ const TripList: React.FC<TripListProps> = ({ trips, onUpdate }) => {
                         </div>
                         <div className="trip-actions" style={{ display: 'flex', gap: '10px' }}>
                             <button
-                                className="publish-btn"
+                                className="publish-btn btn-outline"
                                 onClick={() => handlePublish(trip)}
-                                style={{
-                                    padding: '8px 16px',
-                                    backgroundColor: '#28a745',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
                             >
                                 Publish
                             </button>

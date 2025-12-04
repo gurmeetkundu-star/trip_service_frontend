@@ -40,7 +40,8 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    box-sizing: border-box;
+    /* Ensures padding doesn't affect width */
 }
 
 .modal-actions {
@@ -50,22 +51,32 @@
 }
 
 .cancel-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: transparent;
+    color: #2563eb;
+    border: 1px solid #2563eb;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+    background-color: rgba(37, 99, 235, 0.05);
 }
 
 .submit-btn {
-    background-color: #007bff;
+    background-color: #2563eb;
     color: white;
-    border: none;
+    border: 1px solid #2563eb;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
 .submit-btn:hover {
-    background-color: #0056b3;
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
 }
