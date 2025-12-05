@@ -5,10 +5,12 @@ import TripList from './components/TripList';
 import TripForm from './components/TripForm';
 import ResetDriverDataModal from './components/ResetDriverDataModal';
 import ChatSidebar from './components/ChatSidebar';
+import PatchTab from './components/PatchTab';
 import { mqttService } from './services/mqttService';
 import type { Trip } from './types';
 
 const Home = () => {
+  const [activeTab, setActiveTab] = useState<'trips' | 'patches'>('trips');
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,9 @@ const Home = () => {
       }
     };
 
-    fetchTrips();
+    if (activeTab === 'trips') {
+      fetchTrips();
+    }
 
     // Connect to MQTT on app mount
     mqttService.connect().catch(err => console.error("Failed to connect to MQTT on mount:", err));
@@ -41,7 +45,7 @@ const Home = () => {
     return () => {
       mqttService.disconnect();
     }
-  }, []);
+  }, [activeTab]);
 
   const handleUpdate = (tripId: number) => {
     navigate(`/edit/${tripId}`);
@@ -63,24 +67,62 @@ const Home = () => {
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-        <button className="update-btn" onClick={() => navigate('/create')}>
-          + Create New Trip
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div className="tabs" style={{ display: 'flex', gap: '1rem' }}>
+          <button
+            className={`tab-btn ${activeTab === 'trips' ? 'active' : ''}`}
+            onClick={() => setActiveTab('trips')}
+            style={{
+              padding: '0.5rem 1rem',
+              border: 'none',
+              background: activeTab === 'trips' ? '#007bff' : 'transparent',
+              color: activeTab === 'trips' ? 'white' : 'inherit',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: activeTab === 'trips' ? 'bold' : 'normal'
+            }}
+          >
+            Trips
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'patches' ? 'active' : ''}`}
+            onClick={() => setActiveTab('patches')}
+            style={{
+              padding: '0.5rem 1rem',
+              border: 'none',
+              background: activeTab === 'patches' ? '#007bff' : 'transparent',
+              color: activeTab === 'patches' ? 'white' : 'inherit',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: activeTab === 'patches' ? 'bold' : 'normal'
+            }}
+          >
+            Patches
+          </button>
+        </div>
+        {activeTab === 'trips' && (
+          <button className="update-btn" onClick={() => navigate('/create')}>
+            + Create New Trip
+          </button>
+        )}
       </div>
 
       <div style={{ flex: 1 }}>
-        {loading ? (
-          <div className="loading-state">Loading trips...</div>
-        ) : error ? (
-          <div className="error-state">Error: {error}</div>
-        ) : trips.length === 0 ? (
-          <div className="empty-state">
-            <p>No trips found.</p>
-            <p className="empty-state-sub">Create a new trip to get started.</p>
-          </div>
+        {activeTab === 'trips' ? (
+          loading ? (
+            <div className="loading-state">Loading trips...</div>
+          ) : error ? (
+            <div className="error-state">Error: {error}</div>
+          ) : trips.length === 0 ? (
+            <div className="empty-state">
+              <p>No trips found.</p>
+              <p className="empty-state-sub">Create a new trip to get started.</p>
+            </div>
+          ) : (
+            <TripList trips={trips} onUpdate={handleUpdate} />
+          )
         ) : (
-          <TripList trips={trips} onUpdate={handleUpdate} />
+          <PatchTab />
         )}
       </div>
 
